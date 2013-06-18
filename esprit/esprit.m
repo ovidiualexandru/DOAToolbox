@@ -32,7 +32,7 @@ d = l/lambda;
 Y = Y.'; %transpose Y for the next line
 R = (Y*Y')/N;
 J = fliplr(eye(m));
-R = 1/2*(R + J*R.'*J);
+R = 1/2*(R + J*R.'*J); %make R persymmetric
 [S, D] = eig(R);
 [S,~]=sortem(S,D);
 %% DOA estimation
