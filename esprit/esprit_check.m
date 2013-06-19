@@ -8,7 +8,7 @@ doa = [33 37];
 fp = 4000;
 doa = doa .* pi/180;
 sig = 0.1;
-amps = [1 1.7];
+amps = [1 1];
 %% Generate data
 n = length(doa);
 Y = zeros(N,m);
@@ -18,7 +18,9 @@ for i = 1:n
 end
 Y = addnoise(Y, sig);
 %% DOA
-phi = esprit(Y, fc, l, n)
+[phi,D] = esprit(Y, fc, l, n);
+phi
+D = abs(D)
 %% Plotting
 plot(t, real(Y));
 xlabel('Time');

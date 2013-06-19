@@ -20,7 +20,7 @@
 % ex |phi = esprit(Y, fc, l, 180);| with Y, fc and l defined for
 % simtone_planar
 %%
-function phi = esprit(Y, fc, l, n, c)
+function [phi,W] = esprit(Y, fc, l, n, c)
 %% Preprocessing
 if nargin < 5
     c = 340.29; %speed of sound in air in m/s
@@ -33,14 +33,16 @@ Y = Y.'; %transpose Y for the next line
 R = (Y*Y')/N;
 J = fliplr(eye(m));
 R = 1/2*(R + J*R.'*J); %make R persymmetric
-[S, D] = eig(R);
-[S,~]=sortem(S,D);
+[S,D] = eig(R);
+[S,D]=sortem(S,D);
+D = diag(D);
 %% DOA estimation
 S = S(:,1:n);
 S1 = S(1:m-1, :);
 S2 = S(2:m, :);
 Phi = S1\S2;
-W = eig(Phi);
-w = -angle(eig(Phi)); %ws->fs->sin(theta)
+W = sort(eig(Phi),'descend');
+%sort(W);
+w = -angle(W); %ws->fs->sin(theta)
 phi = asin(w/d/pi/2)*180/pi;
 end

@@ -19,7 +19,9 @@ for i = 1:n
 end
 Y = addnoise(Y, sig);
 %% DOA
-phi = esprit(Y, fp, l, n)
+[phi,D] = esprit(Y, fp, l, n);
+phi
+D = abs(D)
 %% Plotting
 plot(t, real(Y));
 xlabel('Time');
