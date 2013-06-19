@@ -2,6 +2,7 @@
 % Separate frequencies using FFT
 %
 % Input parameters:
+%
 % * _y_: the sample vector, should be of size wlen*bins.
 % * _wlen_: window length, or FFT order. Should be power of 2( 32, 64 etc.)
 % * _bins_: number of frequency bins, number of samples for each frequency.
