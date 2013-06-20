@@ -15,9 +15,9 @@ for i = 1:m
 end
 %% DOA estimation
 L = 180; %num of divisions for [-pi/2, pi/2]
-phicapon = zeros(L, wlen/2+1);
-phiesprit = zeros(180, wlen/2 + 1);
-for i = 1: (wlen/2 + 1)
+phicapon = zeros(L, wlen/2);
+phiesprit = zeros(180, wlen/2);
+for i = 1:wlen/2
     %For each frequency bin run the algorithms
     fi = i2fi(i,fs,wlen);
     %Select a frequency( first dimension of W and get all the samples from
@@ -65,15 +65,14 @@ theta = int16(theta)
 % ylabel('|Y(f)|')
 % grid on
 %% Plot the spatial spectrum
-
 figure
 x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
 x = x * 180/pi; %x in degrees
-surf(f ,x, phicapon);
-ylabel('Degrees');
-xlabel('Frequency');
+imagesc(x,f, phicapon.');
+xlabel('Degrees');
+ylabel('Frequency');
 title('Capon estimation');
-
+grid on
 % figure
 % surf(f ,-90:89, phiesprit);
 % ylabel('Degrees');
