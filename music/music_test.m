@@ -8,7 +8,7 @@ fs = 44100; %sampling frequency
 N = 1000; %num of samples
 fc = 4000; %wave frequency
 doa1 = 27; %doa in degrees
-doa2 = -12; 
+doa2 = -20; 
 %% Generate data
 %%% Narrowband data
 [Ya,d,t] = simtone_planar(doa1*pi/180, m, l, fc, fs, N);
@@ -22,7 +22,7 @@ Y = addnoise(Y,0.1);
 %aps = audioplayer(real(Y), fs);
 %play(aps);
 %% Compute DOAs
-phim = music(Y, fc, l, L, 2);
+phim = music(Y, fc, l, L, 3);
 %% Plotting
 figure(1)
 plot(x,phim);
