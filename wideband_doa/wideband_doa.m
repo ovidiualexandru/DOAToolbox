@@ -16,6 +16,7 @@ end
 %% DOA estimation
 L = 180; %num of divisions for [-pi/2, pi/2]
 phicapon = zeros(L, wlen/2);
+phimusic = zeros(L, wlen/2);
 phiesprit = zeros(180, wlen/2);
 for i = 1:wlen/2
     %For each frequency bin run the algorithms
@@ -35,6 +36,8 @@ for i = 1:wlen/2
     %and only real values of theta
     %approximate to integer, add 90( [-90,90] to [0,180]) and set value
     %at phiesprit(inde
+    %% MUSIC DOA
+    phimusic(:,i) = music(Ytil, fi, l, L, 3);
 end
 %% Esprit debugging
 fi = 1500;
@@ -65,13 +68,22 @@ theta = int16(theta)
 % ylabel('|Y(f)|')
 % grid on
 %% Plot the spatial spectrum
-figure
+figure(1)
 x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
 x = x * 180/pi; %x in degrees
 imagesc(x,f, phicapon.');
 xlabel('Degrees');
 ylabel('Frequency');
 title('Capon estimation');
+grid on
+
+figure(2)
+x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
+x = x * 180/pi; %x in degrees
+imagesc(x,f, phimusic.');
+xlabel('Degrees');
+ylabel('Frequency');
+title('MUSIC estimation');
 grid on
 % figure
 % surf(f ,-90:89, phiesprit);

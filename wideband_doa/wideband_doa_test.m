@@ -43,10 +43,10 @@ Y = addnoise(Y,sig);
 %% Wideband DOA
 wideband_doa(real(Y), l, fs, wlen);
 %% Plotting
-figure
-plot(t, real(Y));
-xlabel('Time');
-ylabel('Value');
-title('Data set');
-legend('Sensor 1','Sensor 2','Sensor 3','Sensor 4','Sensor 5','Sensor 6','Sensor 7','Sensor 8');
-grid on
+% figure(3)
+% plot(t, real(Y));
+% xlabel('Time');
+% ylabel('Value');
+% title('Data set');
+% legend('Sensor 1','Sensor 2','Sensor 3','Sensor 4','Sensor 5','Sensor 6','Sensor 7','Sensor 8');
+% grid on
