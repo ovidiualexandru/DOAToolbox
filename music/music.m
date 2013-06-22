@@ -20,7 +20,7 @@
 % ex |phi = music(Y, fc, l, 180, 3);| with Y, fc and l defined for
 % simtone_planar
 %%
-function phi = music(Y, fc, l, L, n, c)
+function [phi,D] = music(Y, fc, l, L, n, c)
 %% Preprocessing
 if nargin < 6
     c = 340.29; %speed of sound in air in m/s
@@ -44,6 +44,6 @@ for i = 1:L
     fs = d*sin(theta);
     ws = 2*pi*fs;
     a = exp(-1i*ws*(0:m-1).');
-    phi(i) = 1/real(a'*G*G'*a); %1/a'*(GG*)*a
+    phi(i) = 1/real(a'*(G*G')*a); %1/a'*(GG*)*a
 end
 end
