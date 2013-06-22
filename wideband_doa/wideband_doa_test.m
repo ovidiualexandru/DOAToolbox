@@ -10,7 +10,7 @@
 % wlen and bins set the total number of necessary samples, N
 l = 0.04;        %distance between sensors in m
 m = 8;           %num of sensors
-fs = 8100;       %sampling frequency
+fs = 8820;       %sampling frequency
 wlen = 256;      %fft order, or window size
 bins = 10;       %num of windows 
 N = wlen * bins; %num of samples
@@ -40,8 +40,10 @@ for i = 1:n
     Y = Y + Yx;
 end
 Y = addnoise(Y,sig);
+player = audioplayer(Y, fs);
+play(player);
 %% Wideband DOA
-wideband_doa(real(Y), l, fs, wlen);
+wideband_doa(real(Y), l, fs, wlen, bins);
 %% Plotting
 % figure(3)
 % plot(t, real(Y));
