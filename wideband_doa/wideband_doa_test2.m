@@ -12,15 +12,22 @@ l = 0.04;        %distance between sensors in m
 m = 8;           %num of sensors
 wlen = 256;      %fft order, or window size
 bins = 10;       %num of windows 
-N = wlen * bins; %num of samples
+N = wlen * bins * 5; %num of samples
 sig = 0.01; % sig is the noise variance -> influences snr
 %% Signal composition
-[munch,Fs] = wavread('highb.wav');
-Y = simsound_planar(25*pi/180, m, l, munch(:,1), Fs);
+[highb,Fs] = wavread('highb.wav');
+d3 = wavread('d3.wav');
+fc = 1000:50:1500;
+Ya = simsound_planar(13*pi/180, m, l, highb(:,1), Fs);
+Yb = simsound_planar(-45*pi/180, m, l, d3(:,1), Fs);
+Yc = simband_planar(-34 * pi/180, m, l, fc, Fs, N);
 dsfactor = 5; % 'downsampling' factor
 fs = Fs / dsfactor;
+minlines = min(size(Ya,1), size(Yc,1));
+Y = Ya(1:minlines,:) + Yc(1:minlines, :) * 0.01;
+%Y = Ya;
 Y = Y(1:dsfactor:end,:);
-Y = addnoise(Y, sig);
+%Y = addnoise(Y, sig);
 player = audioplayer(Y, fs);
 play(player);
 %% Wideband DOA
