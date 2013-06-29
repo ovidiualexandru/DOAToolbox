@@ -2,15 +2,18 @@
 % filename
 function myRecording = recordsound(Fs, filename, IOID)
 recObj = audiorecorder(Fs, 16, 1, IOID); % the internal mic is at id 2
+% line in at 1
+pause(1);
 disp('Start speaking.')
-recordblocking(recObj, 1);
+recordblocking(recObj, 2);
 disp('End of Recording.');
-% Play back the recording.
-play(recObj);
 % Store data in double-precision array.
 myRecording = getaudiodata(recObj);
 % Plot the waveform.
+% Play back the recording.
+playObj = audioplayer(myRecording, Fs);
+playblocking(playObj);
 plot(myRecording);
 % Write to file
-wavwrite(filename,myRecording, Fs);
+wavwrite(myRecording, Fs, filename);
 end
