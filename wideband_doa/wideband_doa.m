@@ -1,4 +1,4 @@
-function N = wideband_doa(Y, l, fs, wlen, bins, olf)
+function [N, phicapon, phimusic, thetaesprit, f] = wideband_doa(Y, l, fs, n, wlen, bins, olf, L)
 %% Initializations
 m = size(Y,2);
 N = wlen + (wlen - olf)*(bins - 1);
@@ -16,10 +16,9 @@ for i = 1:m
     [W(:,:,i),f] = fft_separate(Y(:,i), wlen, bins, fs, olf);
 end
 %% DOA estimation
-L = 180; %num of divisions for [-pi/2, pi/2]
 phicapon = zeros(L, wlen/2);
 phimusic = zeros(L, wlen/2);
-phiesprit = zeros(180, wlen/2);
+thetaesprit = zeros(n, wlen/2);
 for i = 1:wlen/2
     %For each frequency bin run the algorithms
     fi = i2fi(i,fs,wlen);
@@ -31,15 +30,15 @@ for i = 1:wlen/2
     %% Capon DOA
     phicapon(:,i) = capon(Ytil, fi, l, L);
     %% Esprit DOA
-    [theta, D] = esprit(Ytil, fi, l, 4);
-    D = abs(D);
-    theta = int16(theta);
+    thetaesprit(:,i) = esprit(Ytil, fi, l, n);
+    %D = abs(D);
+    %thetaesprit = int16(thetaesprit);
     %take only D values very close to 1 ?
     %and only real values of theta
     %approximate to integer, add 90( [-90,90] to [0,180]) and set value
     %at phiesprit(inde
     %% MUSIC DOA
-    phimusic(:,i) = music(Ytil, fi, l, L, 3);
+    phimusic(:,i) = music(Ytil, fi, l, L, n);
 end
 %% Esprit debugging
 fi = 1400;
@@ -48,9 +47,10 @@ fi = i2fi(i,fs, wlen);
 Ytil = W(i,:,:);
 Ytil = permute(Ytil, [2 3 1]);
 Ytil = 2*Ytil;
-[theta, D] = esprit(Ytil, fi, l, 2);
-D = abs(D)
-theta = int16(theta)
+[thetaespritdeb, D] = esprit(Ytil, fi, l, 2);
+D = abs(D);
+thetaespritdeb = int16(thetaespritdeb)
+
 %% Plotting
 % %Plot a single frequency
 % figure
@@ -69,24 +69,25 @@ theta = int16(theta)
 % xlabel('Frequency (Hz)')
 % ylabel('|Y(f)|')
 % grid on
-%% Plot the spatial spectrum
-figure(1)
-x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
-x = x * 180/pi; %x in degrees
-imagesc(x,f, phicapon.');
-xlabel('Degrees');
-ylabel('Frequency');
-title('Capon estimation');
-grid on
 
-figure(2)
-x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
-x = x * 180/pi; %x in degrees
-imagesc(x,f, phimusic.');
-xlabel('Degrees');
-ylabel('Frequency');
-title('MUSIC estimation');
-grid on
+%% Plot the spatial spectrum
+% figure(1)
+% x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
+% x = x * 180/pi; %x in degrees
+% imagesc(x,f, phicapon.');
+% xlabel('Degrees');
+% ylabel('Frequency');
+% title('Capon estimation');
+% grid on
+% 
+% figure(2)
+% x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
+% x = x * 180/pi; %x in degrees
+% imagesc(x,f, phimusic.');
+% xlabel('Degrees');
+% ylabel('Frequency');
+% title('MUSIC estimation');
+% grid on
 
 % figure
 % surf(f ,-90:89, phiesprit);
