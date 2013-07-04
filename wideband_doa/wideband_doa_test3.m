@@ -10,17 +10,17 @@
 % wlen and bins set the total number of necessary samples, N
 l = 0.04;        %distance between sensors in m
 m = 8;           %num of sensors
-wlen = 256;      %fft order, or window size
-bins = 10;       %num of windows 
-N = wlen * bins * 5; %num of samples
+wlen = 4096;      %fft order, or window size
+bins = 10;       %num of windows
+olf = wlen/2;    %overlapping factor for stft( fft_separate)
 sig = 0.01; % sig is the noise variance -> influences snr
 %% Signal composition
-[Y,Fs] = wavread('test31.wav');
-
+[Y,Fs, NBITS] = wavread('eighchannel.wav');
+%% Wideband DOA
+N = wideband_doa(real(Y(10000:end, :)), l, Fs, wlen, bins, olf);
+N
 player = audioplayer(Y, Fs);
 play(player);
-%% Wideband DOA
-wideband_doa(real(Y), l, Fs, wlen, bins);
 %% Plotting
 figure(3)
 plot(real(Y));
