@@ -1,5 +1,5 @@
 file = {'1.dat', '2.dat', '3.dat', '4.dat', '5.dat', '6.dat', '7.dat', '8.dat'};
-Fs = 43546;
+Fs =  43478;
 wavname = 'eightchannel.wav';
 Y = [];
 for i = 1:8;
