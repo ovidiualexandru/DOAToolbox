@@ -18,8 +18,8 @@ for i = 1:n
 end
 Y = addnoise(Y, sig);
 %% DOA
-[phi,D] = esprit(Y, fc, l, n);
-phi
+[theta,D] = esprit(Y, fc, l, n);
+theta
 D = abs(D)
 %% Plotting
 plot(t, real(Y));
