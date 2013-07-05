@@ -49,7 +49,7 @@ Ytil = permute(Ytil, [2 3 1]);
 Ytil = 2*Ytil;
 [thetaespritdeb, D] = esprit(Ytil, fi, l, 2);
 D = abs(D);
-thetaespritdeb = int16(thetaespritdeb)
+thetaespritdeb = int16(thetaespritdeb);
 
 %% Plotting
 % %Plot a single frequency

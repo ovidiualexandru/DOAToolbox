@@ -1,3 +1,4 @@
+addpath './DOAToolbox'
 %% Parameters
 L = 180; %num of divisions for [-pi/2, pi/2]
 x = ((0:(L-1)) .* pi/L - pi/2); % x in radians
@@ -7,33 +8,42 @@ m = 8; %num of sensors
 fs = 44100; %sampling frequency
 N = 1000; %num of samples
 fc = 4000; %wave frequency
-doa1 = 27; %doa in degrees
-doa2 = 20; 
+doa = 27; %doa in degrees
 %% Generate data
 %%% Narrowband data
-[Ya,d,t] = simtone_planar(doa1*pi/180, m, l, fc, fs, N);
+[Ya,d,t] = simtone_planar(doa*pi/180, m, l, fc, fs, N);
 Ya = addnoise(Ya,0.1); %add noise with given amplitude
-[Yb,d,t] = simtone_planar(doa2*pi/180, m, l, fc, fs, N);
+[Yb,d,t] = simtone_planar((doa+ 5)*pi/180, m, l, fc, fs, N);
 Yb = addnoise(Yb,0.1); %add noise with given amplitude
-Y = Ya +Yb;
+Y = Ya;
 %[Y,d,t] = simband_planar(doa*pi/180, m, l, [500 4000 4500 1000 100], fs, N, [0.1 1 0.1 0.3 0.01]);
 Y = addnoise(Y,0.1);
-%% Play sound
-%aps = audioplayer(real(Y), fs);
-%play(aps);
+%% Playback
+%player = audioplayer(real(Y), fs);
+%playblocking(player);
 %% Compute DOAs
-[phim,D] = music(Y, fc, l, L, 3);
-D
+phib = beamform(Y, fc, l, L);
+phic = capon(Y,fc, l, L);
+%phie = esprit(Y, fc, l, 2);
 %% Plotting
-figure(1)
-plot(x,phim);
+subplot(2,2,1)
+plot(x,phib);
 xlabel('Degrees');
-title('MUSIC');
+title('Beamforming');
 grid on
-figure(2)
+subplot(2,2,2)
+plot(x,phic);
+xlabel('Degrees');
+title('Capon');
+grid on
+subplot(2,2,3:4)
 plot(t, real(Y));
 xlabel('Time');
 ylabel('Value');
 title('Data set');
 legend('Sensor 1','Sensor 2','Sensor 3','Sensor 4','Sensor 5','Sensor 6','Sensor 7','Sensor 8');
 grid on
+
+%% Clean-up
+rmpath './DOAToolbox'
+clear L N Y Ya Yb d doa fc fs l m phib phic t x player

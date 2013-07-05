@@ -1,3 +1,4 @@
+addpath './DOAToolbox'
 %% Initializations
 %Variables:
 %Fixed:
@@ -19,12 +20,37 @@ olf = wlen/2;    %overlapping factor for stft( fft_separate)
 N = wlen * bins; %num of samples
 L = 180;         %num of divisions for [-pi/2, pi/2]
 %% Signal composition
-[Y,Fs, NBITS] = wavread('test3.wav');
+% Create a frequency range and a doa, and add them to a cell arrays 
+%'fc' and 'doa'
+fc1 = 500:15:1500;
+doa1 = -22;
+fc2 = 1300:25:1500;
+doa2 = 0;
+fc3 = 100:25:150;
+doa3 = 45;
+fc4 = 100:20:200;
+doa4 = 80;
+fc5 = 500:5:1500;
+doa5 = 3;
+fc = {fc1, fc2};
+doa = {doa1, doa2};
+%doa = doa .* pi/180;
+sig = 0.1; % sig is the noise variance -> influences snr
+%amps = [1 1.01 0.99 1 1.02 1.3 1 1.2];
+%% Generate data
+n = length(doa);
+Y = zeros(N,m);
+for i = 1:n
+    [Yx,~,t] = simband_planar(doa{i} * pi/180, m, l, fc{i}, fs, N);
+    Y = Y + Yx;
+end
+Y = addnoise(Y,sig);
+
 %% Wideband DOA
-[N, phicapon, phimusic, thetaesprit, f] = wideband_doa(real(Y), l, Fs, n, wlen, bins, olf, L);
-N
+[N, phicapon, phimusic, thetaesprit, f] = wideband_doa(real(Y), l, fs, n, wlen, bins, olf, L);
+%% Playback
 player = audioplayer(real(Y(1:N,:)), fs);
-play(player);
+playblocking(player);
 %% Plotting
 % figure(3)
 % plot(t, real(Y));
@@ -53,3 +79,6 @@ ylabel('Frequency');
 title('MUSIC estimation');
 grid on
 
+%% Clean-up
+rmpath './DOAToolbox'
+clear L N Y Yx bins doa doa1 doa2 doa3 doa4 doa5 f fc fc1 fc2 fc3 fc4 fc5 fs i l m n olf phicapon phimusic player sig t thetaesprit wlen x

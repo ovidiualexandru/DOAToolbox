@@ -1,3 +1,5 @@
+addpath './DOAToolbox'
+addpath './wav'
 %% Initializations
 %Variables:
 %Fixed:
@@ -13,32 +15,19 @@
 l = 0.04;        %distance between sensors in m
 m = 8;           %num of sensors
 fs = 8820;       %sampling frequency
-wlen = 256;      %fft order, or window size
+wlen = 512;      %fft order, or window size
 bins = 10;       %num of windows 
 olf = wlen/2;    %overlapping factor for stft( fft_separate)
-N = wlen * bins * 5; %num of samples
+N = wlen * bins; %num of samples
 L = 180;         %num of divisions for [-pi/2, pi/2]
-%% Signal composition
-[highb,Fs] = wavread('highb.wav');
-d3 = wavread('d3.wav');
-fc = 1000:50:1500;
-Ya = simsound_planar(13*pi/180, m, l, highb(:,1), Fs);
-Yb = simsound_planar(-45*pi/180, m, l, d3(:,1), Fs);
-Yc = simband_planar(-34 * pi/180, m, l, fc, Fs, N);
-dsfactor = 5; % 'downsampling' factor
-fs = Fs / dsfactor;
-minlines = min(size(Ya,1), size(Yc,1));
-Y = Ya(1:minlines,:) + Yc(1:minlines, :) * 0.01;
-%Y = Ya;
-Y = Y(1:dsfactor:end,:);
-%Y = addnoise(Y, sig);
-player = audioplayer(Y, fs);
-play(player);
+%% Generate data
+[Y,Fs ] = wavread('8chan_test3.wav');
+n = 1;
 %% Wideband DOA
-[N, phicapon, phimusic, thetaesprit, f] = wideband_doa(real(Y), l, fs, n, wlen, bins, olf, L);
-N
+[N, phicapon, phimusic, thetaesprit, f] = wideband_doa(real(Y), l, Fs, n, wlen, bins, olf, L);
+%% Playback
 player = audioplayer(real(Y(1:N,:)), fs);
-play(player);
+playblocking(player);
 %% Plotting
 % figure(3)
 % plot(t, real(Y));
@@ -66,3 +55,8 @@ xlabel('Degrees');
 ylabel('Frequency');
 title('MUSIC estimation');
 grid on
+
+%% Clean-up
+rmpath './DOAToolbox'
+rmpath './wav'
+clear Fs L N NBITS Y bins f fs l m n olf phicapon phimusic player thetaesprit wlen x
