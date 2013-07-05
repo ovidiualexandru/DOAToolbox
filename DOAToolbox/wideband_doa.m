@@ -41,15 +41,15 @@ for i = 1:wlen/2
     phimusic(:,i) = music(Ytil, fi, l, L, n);
 end
 %% Esprit debugging
-fi = 1400;
-i = fi2i(fi,fs,wlen);
-fi = i2fi(i,fs, wlen);
-Ytil = W(i,:,:);
-Ytil = permute(Ytil, [2 3 1]);
-Ytil = 2*Ytil;
-[thetaespritdeb, D] = esprit(Ytil, fi, l, 2);
-D = abs(D);
-thetaespritdeb = int16(thetaespritdeb);
+% fi = 1400;
+% i = fi2i(fi,fs,wlen);
+% fi = i2fi(i,fs, wlen);
+% Ytil = W(i,:,:);
+% Ytil = permute(Ytil, [2 3 1]);
+% Ytil = 2*Ytil;
+% [thetaespritdeb, D] = esprit(Ytil, fi, l, 2);
+% D = abs(D);
+% thetaespritdeb = int16(thetaespritdeb);
 
 %% Plotting
 % %Plot a single frequency

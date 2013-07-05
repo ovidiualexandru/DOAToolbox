@@ -18,23 +18,13 @@ fs = 8820;       %sampling frequency
 wlen = 512;      %fft order, or window size
 bins = 10;       %num of windows 
 olf = wlen/2;    %overlapping factor for stft( fft_separate)
+N = wlen * bins; %num of samples
 L = 180;         %num of divisions for [-pi/2, pi/2]
-sig = 0.1;
 %% Generate data
-[highb,Fs ] = wavread('mono_highpitch.wav');
+[Y,Fs ] = wavread('8chan_test3.wav');
 n = 1;
-doa = [12];
-[Y, ~] = simsound_planar(doa(1) * pi/180, m, l, highb(:, 1), Fs);
-[Y, Fs] = downsample(Y,Fs, 5);
-Y = addnoise(Y, sig);
 %% Wideband DOA
-[N, phicapon, phimusic , thetaesprit, f] = wideband_doa(Y, l, fs, n, wlen, bins, olf, L);
-
-%% Spectrum
-highbfft = fft(highb(:,1), length(f)*2);
-figure(3);
-plot(f,2*abs(Y(1:length(f)))) 
-
+[N, phicapon, phimusic , thetaesprit, f] = wideband_doa(real(Y), l, fs, n, wlen, bins, olf, L);
 %% Plotting
 % figure(3)
 % plot(t, real(Y));
@@ -66,4 +56,4 @@ grid on
 %% Clean-up
 rmpath './DOAToolbox'
 rmpath './wav'
-clear Fs L N Y bins f fs l m n olf phicapon phimusic thetaesprit wlen x doa highb highbfft sig
+clear Fs L N Y bins f fs l m n olf phicapon phimusic thetaesprit wlen x
